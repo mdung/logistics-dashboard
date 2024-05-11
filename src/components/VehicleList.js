@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button } from '@mui/material';
-import { getAllVehicles, addVehicle } from '../services/VehicleService';
+import { getAllVehicles, addVehicle, updateVehicle, deleteVehicle } from '../services/VehicleService';
 import './VehicleList.css';
 
 const VehicleList = () => {
@@ -41,6 +41,28 @@ const VehicleList = () => {
     }
   };
 
+  const handleUpdateVehicle = async (id, updatedData) => {
+    try {
+      await updateVehicle(id, updatedData);
+      // Refresh vehicle list after updating vehicle
+      const updatedVehicles = await getAllVehicles();
+      setVehicles(updatedVehicles);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleDeleteVehicle = async (id) => {
+    try {
+      await deleteVehicle(id);
+      // Refresh vehicle list after deleting vehicle
+      const updatedVehicles = await getAllVehicles();
+      setVehicles(updatedVehicles);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   return (
     <div className="vehicle-list-container">
       <h1>Vehicle List</h1>
@@ -68,6 +90,7 @@ const VehicleList = () => {
                 <TableCell>Registration Number</TableCell>
                 <TableCell>Capacity</TableCell>
                 <TableCell>Location</TableCell>
+                <TableCell>Action</TableCell> {/* New column for actions */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -79,6 +102,10 @@ const VehicleList = () => {
                   <TableCell>{vehicle.registrationNumber}</TableCell>
                   <TableCell>{vehicle.capacity}</TableCell>
                   <TableCell>{vehicle.location}</TableCell>
+                  <TableCell>
+                    <Button variant="contained" color="primary" onClick={() => handleUpdateVehicle(vehicle.id, { model: 'Updated Model', color: 'Updated Color', year: 'Updated Year', registrationNumber: 'Updated Reg Number', capacity: 'Updated Capacity', location: 'Updated Location' })}>Update</Button>
+                    <Button variant="contained" color="error" onClick={() => handleDeleteVehicle(vehicle.id)}>Delete</Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

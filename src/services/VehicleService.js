@@ -32,4 +32,22 @@ export const addVehicle = async (vehicleData) => {
   }
 };
 
-// Define other functions for remaining endpoints (update, delete, etc.) if needed
+export const updateVehicle = async (id, updatedVehicleData) => {
+  try {
+    const response = await axios.put(`${BASE_URL}/${id}`, updatedVehicleData, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating vehicle with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+export const deleteVehicle = async (id) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/${id}`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting vehicle with ID ${id}:`, error);
+    throw error;
+  }
+};
