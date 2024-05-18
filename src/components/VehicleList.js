@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button } from '@mui/material';
 import { getAllVehicles, addVehicle, updateVehicle, deleteVehicle } from '../services/VehicleService';
-import './VehicleList.css';
+import '../styles/VehicleList.css'; // Make sure the CSS file is imported correctly
 
 const VehicleList = () => {
   const [vehicles, setVehicles] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [newVehicleData, setNewVehicleData] = useState({ model: '', color: '', year: '', registrationNumber: '', capacity: '', location: '' });
+  const [newVehicleData, setNewVehicleData] = useState({
+    model: '',
+    color: '',
+    year: '',
+    registrationNumber: '',
+    capacity: '',
+    location: ''
+  });
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -32,10 +39,16 @@ const VehicleList = () => {
   const handleAddVehicle = async () => {
     try {
       await addVehicle(newVehicleData);
-      // Refresh vehicle list after adding new vehicle
       const updatedVehicles = await getAllVehicles();
       setVehicles(updatedVehicles);
-      setNewVehicleData({ model: '', color: '', year: '', registrationNumber: '', capacity: '', location: '' }); // Clear input fields
+      setNewVehicleData({
+        model: '',
+        color: '',
+        year: '',
+        registrationNumber: '',
+        capacity: '',
+        location: ''
+      });
     } catch (error) {
       setError(error.message);
     }
@@ -44,7 +57,6 @@ const VehicleList = () => {
   const handleUpdateVehicle = async (id, updatedData) => {
     try {
       await updateVehicle(id, updatedData);
-      // Refresh vehicle list after updating vehicle
       const updatedVehicles = await getAllVehicles();
       setVehicles(updatedVehicles);
     } catch (error) {
@@ -55,7 +67,6 @@ const VehicleList = () => {
   const handleDeleteVehicle = async (id) => {
     try {
       await deleteVehicle(id);
-      // Refresh vehicle list after deleting vehicle
       const updatedVehicles = await getAllVehicles();
       setVehicles(updatedVehicles);
     } catch (error) {
@@ -90,7 +101,7 @@ const VehicleList = () => {
                 <TableCell>Registration Number</TableCell>
                 <TableCell>Capacity</TableCell>
                 <TableCell>Location</TableCell>
-                <TableCell>Action</TableCell> {/* New column for actions */}
+                <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

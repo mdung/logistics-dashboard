@@ -1,0 +1,42 @@
+.vehicle-list-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.add-vehicle-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.add-vehicle-form .MuiTextField-root {
+  flex: 1;
+  min-width: 150px;
+}
+
+.add-vehicle-form .MuiButton-root {
+  align-self: center;
+}
+
+.table-container {
+  margin-top: 20px;
+}
+
+.table-container .MuiTableCell-head {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
+
+.table-container .MuiTableRow-root:hover {
+  background-color: #f0f0f0;
+}
+
+.table-container .MuiTableCell-body {
+  padding: 8px;
+}
+
+.table-container .MuiButton-root {
+  margin-right: 10px;
+}
