@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { addVehicle } from '../services/VehicleService';
 
 const VehicleForm = ({ onAdd }) => {
@@ -11,6 +12,8 @@ const VehicleForm = ({ onAdd }) => {
     capacity: '',
     location: ''
   });
+
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +33,7 @@ const VehicleForm = ({ onAdd }) => {
         capacity: '',
         location: ''
       });
+      navigate('/vehicles'); // Redirect to the Vehicle List page after successful submission
     } catch (error) {
       console.error('Error adding vehicle:', error);
     }

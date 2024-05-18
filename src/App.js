@@ -1,36 +1,27 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import HomePage from './pages/HomePage';
 import VehicleListPage from './pages/VehicleListPage';
 import VehicleFormPage from './pages/VehicleFormPage';
-import DeliveryOrderFormPage from './pages/DeliveryOrderFormPage';
 import DeliveryOrderListPage from './pages/DeliveryOrderListPage';
-import './App.css';
+import DeliveryOrderFormPage from './pages/DeliveryOrderFormPage';
+import ReportPage from './pages/ReportPage';
 
-function App() {
+const App = () => {
   return (
     <Router>
-      <div className="App">
-        <Navbar />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/vehicles" element={<VehicleListPage />} />
-            <Route path="/add-vehicle" element={<VehicleFormPage />} />
-            <Route path="/create-delivery-order" element={<DeliveryOrderFormPage />} />
-            <Route path="/delivery-orders" element={<DeliveryOrderListPage />} />
-          </Routes>
-        </main>
-      </div>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/vehicles" element={<VehicleListPage />} />
+        <Route path="/add-vehicle" element={<VehicleFormPage />} />
+        <Route path="/delivery-orders" element={<DeliveryOrderListPage />} />
+        <Route path="/create-delivery-order" element={<DeliveryOrderFormPage />} />
+        <Route path="/report" element={<ReportPage />} />
+      </Routes>
     </Router>
   );
-}
-
-const Home = () => (
-  <div>
-    <h1>Welcome to the Management System</h1>
-    <p>Select a menu item to get started.</p>
-  </div>
-);
+};
 
 export default App;

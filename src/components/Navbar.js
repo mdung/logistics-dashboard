@@ -67,6 +67,7 @@ const Navbar = () => {
             <MenuItem onClick={handleDeliveryOrderMenuClose} component={Link} to="/delivery-orders">Delivery Order List</MenuItem>
             <MenuItem onClick={handleDeliveryOrderMenuClose} component={Link} to="/create-delivery-order">Delivery Order Form</MenuItem>
           </Menu>
+          <Button color="inherit" component={Link} to="/report">Report</Button>
         </Box>
         <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
           <Menu
@@ -93,6 +94,7 @@ const Navbar = () => {
               <MenuItem onClick={handleDeliveryOrderMenuClose} component={Link} to="/delivery-orders">Delivery Order List</MenuItem>
               <MenuItem onClick={handleDeliveryOrderMenuClose} component={Link} to="/create-delivery-order">Delivery Order Form</MenuItem>
             </Menu>
+            <MenuItem onClick={handleMenuClose} component={Link} to="/report">Report</MenuItem>
           </Menu>
         </Box>
       </Toolbar>

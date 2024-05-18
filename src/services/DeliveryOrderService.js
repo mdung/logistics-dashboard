@@ -45,6 +45,15 @@ const DeliveryOrderService = {
     } catch (error) {
       throw new Error(`Error fetching vehicle IDs: ${error.message}`);
     }
+  },
+
+  fetchTrackingInfo: async (deliveryOrderId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/tracking/${deliveryOrderId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(`Error fetching tracking info: ${error.message}`);
+    }
   }
 };
 

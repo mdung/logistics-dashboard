@@ -1,6 +1,8 @@
-import { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import DeliveryOrderService from '../services/DeliveryOrderService';
+import { getAllVehicles } from '../services/VehicleService';
 
 const DeliveryOrderForm = ({ onAdd }) => {
   const [deliveryOrderData, setDeliveryOrderData] = useState({
@@ -8,8 +10,20 @@ const DeliveryOrderForm = ({ onAdd }) => {
     deliveryAddress: '',
     deliveryTime: '',
     volume: 0,
-    vehicleId: null // Include vehicleId if needed
+    vehicleId: ''
   });
+
+  const [vehicles, setVehicles] = useState([]);
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      const data = await getAllVehicles();
+      setVehicles(data);
+    };
+
+    fetchVehicles();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,15 +33,19 @@ const DeliveryOrderForm = ({ onAdd }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await DeliveryOrderService.createDeliveryOrder(deliveryOrderData); // Use createDeliveryOrder directly
-      onAdd(); // Trigger parent component action after adding delivery order
+      // Ensure the datetime format is correct
+      const formattedDeliveryTime = `${deliveryOrderData.deliveryTime}:00`;
+      const deliveryOrderPayload = { ...deliveryOrderData, deliveryTime: formattedDeliveryTime };
+      await DeliveryOrderService.createDeliveryOrder(deliveryOrderPayload);
+      onAdd();
       setDeliveryOrderData({
         customerName: '',
         deliveryAddress: '',
         deliveryTime: '',
         volume: 0,
-        vehicleId: null // Reset vehicleId
+        vehicleId: ''
       });
+      navigate('/delivery-orders'); // Redirect to the Delivery Order List page after successful submission
     } catch (error) {
       console.error('Error adding delivery order:', error);
     }
@@ -68,12 +86,21 @@ const DeliveryOrderForm = ({ onAdd }) => {
         onChange={handleInputChange}
         required
       />
-      <TextField
-        label="Vehicle ID"
-        name="vehicleId"
-        value={deliveryOrderData.vehicleId || ''}
-        onChange={handleInputChange}
-      />
+      <FormControl required>
+        <InputLabel>Vehicle</InputLabel>
+        <Select
+          name="vehicleId"
+          value={deliveryOrderData.vehicleId}
+          onChange={handleInputChange}
+          displayEmpty
+        >
+          {vehicles.map((vehicle) => (
+            <MenuItem key={vehicle.id} value={vehicle.id}>
+              {`${vehicle.model} - ${vehicle.registrationNumber} (ID: ${vehicle.id})`}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
       <Button variant="contained" color="primary" type="submit">
         Add Delivery Order
       </Button>
