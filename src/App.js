@@ -11,10 +11,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <header className="App-header">
-          <h1>Management System</h1>
-          <Navbar />
-        </header>
+        <Navbar />
         <main>
           <Routes>
             <Route path="/" element={<Home />} />

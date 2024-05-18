@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
-import { addVehicle } from '../services/VehicleService'; // Correct import
+import { addVehicle } from '../services/VehicleService';
 
 const VehicleForm = ({ onAdd }) => {
   const [vehicleData, setVehicleData] = useState({

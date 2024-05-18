@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Button } from '@mui/material';
-import { getAllVehicles, addVehicle, updateVehicle, deleteVehicle } from '../services/VehicleService';
-import '../styles/VehicleList.css'; // Make sure the CSS file is imported correctly
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TablePagination } from '@mui/material';
+import { getAllVehicles, deleteVehicle, updateVehicle } from '../services/VehicleService';
+import '../styles/VehicleList.css';
 
 const VehicleList = () => {
   const [vehicles, setVehicles] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [newVehicleData, setNewVehicleData] = useState({
-    model: '',
-    color: '',
-    year: '',
-    registrationNumber: '',
-    capacity: '',
-    location: ''
-  });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -31,26 +25,12 @@ const VehicleList = () => {
     fetchVehicles();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewVehicleData({ ...newVehicleData, [name]: value });
-  };
-
-  const handleAddVehicle = async () => {
+  const handleDeleteVehicle = async (id) => {
     try {
-      await addVehicle(newVehicleData);
-      const updatedVehicles = await getAllVehicles();
-      setVehicles(updatedVehicles);
-      setNewVehicleData({
-        model: '',
-        color: '',
-        year: '',
-        registrationNumber: '',
-        capacity: '',
-        location: ''
-      });
+      await deleteVehicle(id);
+      setVehicles(vehicles.filter(vehicle => vehicle.id !== id));
     } catch (error) {
-      setError(error.message);
+      console.error('Error deleting vehicle:', error);
     }
   };
 
@@ -64,64 +44,65 @@ const VehicleList = () => {
     }
   };
 
-  const handleDeleteVehicle = async (id) => {
-    try {
-      await deleteVehicle(id);
-      const updatedVehicles = await getAllVehicles();
-      setVehicles(updatedVehicles);
-    } catch (error) {
-      setError(error.message);
-    }
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
     <div className="vehicle-list-container">
       <h1>Vehicle List</h1>
-      <div className="add-vehicle-form">
-        <TextField label="Model" name="model" value={newVehicleData.model} onChange={handleInputChange} />
-        <TextField label="Color" name="color" value={newVehicleData.color} onChange={handleInputChange} />
-        <TextField label="Year" name="year" value={newVehicleData.year} onChange={handleInputChange} />
-        <TextField label="Registration Number" name="registrationNumber" value={newVehicleData.registrationNumber} onChange={handleInputChange} />
-        <TextField label="Capacity" name="capacity" value={newVehicleData.capacity} onChange={handleInputChange} />
-        <TextField label="Location" name="location" value={newVehicleData.location} onChange={handleInputChange} />
-        <Button variant="contained" color="primary" onClick={handleAddVehicle}>Add Vehicle</Button>
-      </div>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>Error: {error}</p>
       ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Model</TableCell>
-                <TableCell>Color</TableCell>
-                <TableCell>Year</TableCell>
-                <TableCell>Registration Number</TableCell>
-                <TableCell>Capacity</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {vehicles.map(vehicle => (
-                <TableRow key={vehicle.id}>
-                  <TableCell>{vehicle.model}</TableCell>
-                  <TableCell>{vehicle.color}</TableCell>
-                  <TableCell>{vehicle.year}</TableCell>
-                  <TableCell>{vehicle.registrationNumber}</TableCell>
-                  <TableCell>{vehicle.capacity}</TableCell>
-                  <TableCell>{vehicle.location}</TableCell>
-                  <TableCell>
-                    <Button variant="contained" color="primary" onClick={() => handleUpdateVehicle(vehicle.id, { model: 'Updated Model', color: 'Updated Color', year: 'Updated Year', registrationNumber: 'Updated Reg Number', capacity: 'Updated Capacity', location: 'Updated Location' })}>Update</Button>
-                    <Button variant="contained" color="error" onClick={() => handleDeleteVehicle(vehicle.id)}>Delete</Button>
-                  </TableCell>
+        <>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Model</TableCell>
+                  <TableCell>Color</TableCell>
+                  <TableCell>Year</TableCell>
+                  <TableCell>Registration Number</TableCell>
+                  <TableCell>Capacity</TableCell>
+                  <TableCell>Location</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {vehicles.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(vehicle => (
+                  <TableRow key={vehicle.id}>
+                    <TableCell>{vehicle.model}</TableCell>
+                    <TableCell>{vehicle.color}</TableCell>
+                    <TableCell>{vehicle.year}</TableCell>
+                    <TableCell>{vehicle.registrationNumber}</TableCell>
+                    <TableCell>{vehicle.capacity}</TableCell>
+                    <TableCell>{vehicle.location}</TableCell>
+                    <TableCell>
+                      <Button variant="contained" color="primary" onClick={() => handleUpdateVehicle(vehicle.id, { model: 'Updated Model', color: 'Updated Color', year: 'Updated Year', registrationNumber: 'Updated Reg Number', capacity: 'Updated Capacity', location: 'Updated Location' })}>Update</Button>
+                      <Button variant="contained" color="error" onClick={() => handleDeleteVehicle(vehicle.id)}>Delete</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={vehicles.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </>
       )}
     </div>
   );

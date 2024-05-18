@@ -1,5 +1,5 @@
 import React from 'react';
-import VehicleForm from '../components/VehicleForm'; // Correct import path
+import VehicleForm from '../components/VehicleForm'; // Make sure you have a VehicleForm component
 import '../styles/VehicleForm.css'; // Ensure the CSS file exists
 
 const VehicleFormPage = () => (
