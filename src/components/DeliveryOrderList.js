@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Modal, Box, Select, MenuItem } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Modal, Box, Select, MenuItem, TablePagination } from '@mui/material';
 import DeliveryOrderService from '../services/DeliveryOrderService';
 import '../styles/DeliveryOrderList.css';
 
@@ -9,6 +9,8 @@ const DeliveryOrderList = () => {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [vehicleId, setVehicleId] = useState('');
   const [vehicleIds, setVehicleIds] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchDeliveryOrders = async () => {
@@ -76,9 +78,17 @@ const DeliveryOrderList = () => {
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <div className="delivery-order-list-container">
-      <h1>Delivery Order List</h1>
       <TableContainer component={Paper} className="table-container">
         <Table>
           <TableHead>
@@ -92,13 +102,13 @@ const DeliveryOrderList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {deliveryOrders.map(order => (
+            {deliveryOrders.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(order => (
               <TableRow key={order.id}>
                 <TableCell>{order.customerName}</TableCell>
                 <TableCell>{order.deliveryAddress}</TableCell>
                 <TableCell>{new Date(order.deliveryTime).toLocaleString()}</TableCell>
                 <TableCell>{order.volume}</TableCell>
-                <TableCell>{order.vehicle ? order.vehicle.registrationNumber : 'N/A'}</TableCell>
+                <TableCell>{order.vehicleId ? order.vehicleId : 'N/A'}</TableCell>
                 <TableCell>
                   <Button variant="contained" color="error" onClick={() => handleDelete(order.id)}>Delete</Button>
                   <Button variant="contained" color="primary" onClick={() => handleOpenModal(order.id)}>Add Vehicle</Button>
@@ -107,8 +117,18 @@ const DeliveryOrderList = () => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={deliveryOrders.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
 
+      {/* Modal for adding vehicle */}
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
           <h2>Add Vehicle Information</h2>

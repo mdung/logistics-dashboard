@@ -1,21 +1,39 @@
 import React from 'react';
-import VehicleList from './components/VehicleList'; // Import VehicleList component
-import DeliveryOrderForm from './components/DeliveryOrderForm';
-import DeliveryOrderList from './components/DeliveryOrderList';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import VehicleListPage from './pages/VehicleListPage';
+import VehicleFormPage from './pages/VehicleFormPage';
+import DeliveryOrderFormPage from './pages/DeliveryOrderFormPage';
+import DeliveryOrderListPage from './pages/DeliveryOrderListPage';
+import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Vehicle Management</h1> {/* Update the header to reflect vehicle management */}
-      </header>
-      <main>
-        <VehicleList /> {/* Use VehicleList component here */}
-        <DeliveryOrderForm />
-        <DeliveryOrderList />
-      </main>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <h1>Management System</h1>
+          <Navbar />
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/vehicles" element={<VehicleListPage />} />
+            <Route path="/add-vehicle" element={<VehicleFormPage />} />
+            <Route path="/create-delivery-order" element={<DeliveryOrderFormPage />} />
+            <Route path="/delivery-orders" element={<DeliveryOrderListPage />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
+
+const Home = () => (
+  <div>
+    <h1>Welcome to the Management System</h1>
+    <p>Select a menu item to get started.</p>
+  </div>
+);
 
 export default App;
