@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Modal, Box, Select, MenuItem } from '@mui/material';
+import { styled } from '@mui/material/styles';  // Add this import statement
 import DeliveryOrderService from '../services/DeliveryOrderService';
-import '../styles/DeliveryOrderList.css'; // Update the import path for the CSS file
-import TrackingInfoModal from './TrackingInfoModal'; // Import the new TrackingInfoModal component
+import '../styles/DeliveryOrderList.css';
+import TrackingInfoModal from './TrackingInfoModal';
+
+const StyledTableCell = styled(TableCell)({
+  backgroundColor: '#f5f5f5',
+  fontWeight: 'bold',
+});
 
 const DeliveryOrderList = () => {
   const [deliveryOrders, setDeliveryOrders] = useState([]);
@@ -61,15 +67,11 @@ const DeliveryOrderList = () => {
       return;
     }
 
-    console.log('Selected Vehicle ID:', vehicleId);
-    console.log('Updating Order ID:', selectedOrderId);
-
     try {
       const orderToUpdate = deliveryOrders.find(order => order.id === selectedOrderId);
       const updatedOrderData = { ...orderToUpdate, vehicle: { id: vehicleId } };
 
       const updatedOrder = await DeliveryOrderService.updateDeliveryOrder(selectedOrderId, updatedOrderData);
-      console.log('Updated Order:', updatedOrder);
 
       setDeliveryOrders(deliveryOrders.map(order => order.id === selectedOrderId ? updatedOrder : order));
       handleCloseModal();
@@ -95,13 +97,13 @@ const DeliveryOrderList = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Customer Name</TableCell>
-              <TableCell>Delivery Address</TableCell>
-              <TableCell>Delivery Time</TableCell>
-              <TableCell>Volume</TableCell>
-              <TableCell>Vehicle ID</TableCell>
-              <TableCell>Action</TableCell>
-              <TableCell>Tracking</TableCell>
+              <StyledTableCell>Customer Name</StyledTableCell>
+              <StyledTableCell>Delivery Address</StyledTableCell>
+              <StyledTableCell>Delivery Time</StyledTableCell>
+              <StyledTableCell>Volume</StyledTableCell>
+              <StyledTableCell>Vehicle ID</StyledTableCell>
+              <StyledTableCell>Action</StyledTableCell>
+              <StyledTableCell>Tracking</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -125,7 +127,6 @@ const DeliveryOrderList = () => {
         </Table>
       </TableContainer>
 
-      {/* Modal for adding vehicle */}
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
           <h2>Add Vehicle Information</h2>
@@ -146,7 +147,6 @@ const DeliveryOrderList = () => {
         </Box>
       </Modal>
 
-      {/* Modal for tracking info */}
       {selectedOrderId && (
         <TrackingInfoModal
           open={openTrackingModal}
