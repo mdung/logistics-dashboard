@@ -1,4 +1,3 @@
-// components/VehicleUpdateModal.js
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, Button } from '@mui/material';
 
@@ -29,7 +28,7 @@ const VehicleUpdateModal = ({ open, handleClose, vehicle, handleUpdate }) => {
         <TextField
           name="model"
           label="Model"
-          value={updatedVehicle.model}
+          value={updatedVehicle?.model || ''}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -37,7 +36,7 @@ const VehicleUpdateModal = ({ open, handleClose, vehicle, handleUpdate }) => {
         <TextField
           name="color"
           label="Color"
-          value={updatedVehicle.color}
+          value={updatedVehicle?.color || ''}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -45,7 +44,7 @@ const VehicleUpdateModal = ({ open, handleClose, vehicle, handleUpdate }) => {
         <TextField
           name="year"
           label="Year"
-          value={updatedVehicle.year}
+          value={updatedVehicle?.year || ''}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -53,7 +52,7 @@ const VehicleUpdateModal = ({ open, handleClose, vehicle, handleUpdate }) => {
         <TextField
           name="registrationNumber"
           label="Registration Number"
-          value={updatedVehicle.registrationNumber}
+          value={updatedVehicle?.registrationNumber || ''}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -61,7 +60,7 @@ const VehicleUpdateModal = ({ open, handleClose, vehicle, handleUpdate }) => {
         <TextField
           name="capacity"
           label="Capacity"
-          value={updatedVehicle.capacity}
+          value={updatedVehicle?.capacity || ''}
           onChange={handleChange}
           fullWidth
           margin="normal"
@@ -69,7 +68,7 @@ const VehicleUpdateModal = ({ open, handleClose, vehicle, handleUpdate }) => {
         <TextField
           name="location"
           label="Location"
-          value={updatedVehicle.location}
+          value={updatedVehicle?.location || ''}
           onChange={handleChange}
           fullWidth
           margin="normal"

@@ -1,5 +1,18 @@
+import React, { useState, useEffect } from 'react';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import { Modal, Box, Typography } from '@mui/material';
+import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// Fix for default marker icon issue with Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 const TrackingInfoModal = ({ open, onClose, deliveryOrderId }) => {
     const [positions, setPositions] = useState([]);
@@ -42,7 +55,7 @@ const TrackingInfoModal = ({ open, onClose, deliveryOrderId }) => {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     />
                     {positions.map((position, index) => (
-                        <Marker key={index} position={[position.latitude, position.longitude]} icon={icon} />
+                        <Marker key={index} position={[position.latitude, position.longitude]} />
                     ))}
                     <Polyline positions={positions.map((pos) => [pos.latitude, pos.longitude])} />
                 </MapContainer>
