@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TablePagination } from '@mui/material';
 import { getAllVehicles, deleteVehicle, updateVehicle } from '../services/VehicleService';
+import VehicleUpdateModal from '../components/VehicleUpdateModal';
 import '../styles/VehicleList.css';
 
 const VehicleList = () => {
@@ -9,6 +10,8 @@ const VehicleList = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -34,9 +37,9 @@ const VehicleList = () => {
     }
   };
 
-  const handleUpdateVehicle = async (id, updatedData) => {
+  const handleUpdateVehicle = async (updatedVehicle) => {
     try {
-      await updateVehicle(id, updatedData);
+      await updateVehicle(updatedVehicle.id, updatedVehicle);
       const updatedVehicles = await getAllVehicles();
       setVehicles(updatedVehicles);
     } catch (error) {
@@ -51,6 +54,16 @@ const VehicleList = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleOpenModal = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedVehicle(null); // Reset selected vehicle on close
   };
 
   return (
@@ -85,7 +98,7 @@ const VehicleList = () => {
                     <TableCell>{vehicle.capacity}</TableCell>
                     <TableCell>{vehicle.location}</TableCell>
                     <TableCell>
-                      <Button variant="contained" color="primary" onClick={() => handleUpdateVehicle(vehicle.id, { model: 'Updated Model', color: 'Updated Color', year: 'Updated Year', registrationNumber: 'Updated Reg Number', capacity: 'Updated Capacity', location: 'Updated Location' })}>Update</Button>
+                      <Button variant="contained" color="primary" onClick={() => handleOpenModal(vehicle)}>Update</Button>
                       <Button variant="contained" color="error" onClick={() => handleDeleteVehicle(vehicle.id)}>Delete</Button>
                     </TableCell>
                   </TableRow>
@@ -103,6 +116,14 @@ const VehicleList = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </>
+      )}
+      {selectedVehicle && (
+        <VehicleUpdateModal
+          open={openModal}
+          handleClose={handleCloseModal}
+          vehicle={selectedVehicle}
+          handleUpdate={handleUpdateVehicle}
+        />
       )}
     </div>
   );
