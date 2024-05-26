@@ -51,3 +51,13 @@ export const deleteVehicle = async (id) => {
     throw error;
   }
 };
+
+const VehicleService = {
+  getAllVehicles,
+  getVehicleById,
+  addVehicle,
+  updateVehicle,
+  deleteVehicle
+};
+
+export default VehicleService;

@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { TextField, Button, Box, MenuItem } from '@mui/material';
 import DeliveryOrderService from '../services/DeliveryOrderService';
+import VehicleService from '../services/VehicleService';
 
 const DeliveryOrderForm = ({ onAdd }) => {
   const [deliveryOrderData, setDeliveryOrderData] = useState({
@@ -8,8 +9,23 @@ const DeliveryOrderForm = ({ onAdd }) => {
     deliveryAddress: '',
     deliveryTime: '',
     volume: 0,
-    vehicleId: null // Include vehicleId if needed
+    vehicleId: ''
   });
+
+  const [vehicles, setVehicles] = useState([]);
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const vehiclesData = await VehicleService.getAllVehicles();
+        setVehicles(vehiclesData);
+      } catch (error) {
+        console.error('Error fetching vehicles:', error);
+      }
+    };
+
+    fetchVehicles();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,14 +35,14 @@ const DeliveryOrderForm = ({ onAdd }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await DeliveryOrderService.createDeliveryOrder(deliveryOrderData); // Use createDeliveryOrder directly
-      onAdd(); // Trigger parent component action after adding delivery order
+      await DeliveryOrderService.createDeliveryOrder(deliveryOrderData);
+      onAdd();
       setDeliveryOrderData({
         customerName: '',
         deliveryAddress: '',
         deliveryTime: '',
         volume: 0,
-        vehicleId: null // Reset vehicleId
+        vehicleId: ''
       });
     } catch (error) {
       console.error('Error adding delivery order:', error);
@@ -69,11 +85,19 @@ const DeliveryOrderForm = ({ onAdd }) => {
         required
       />
       <TextField
-        label="Vehicle ID"
+        select
+        label="Vehicle"
         name="vehicleId"
-        value={deliveryOrderData.vehicleId || ''}
+        value={deliveryOrderData.vehicleId}
         onChange={handleInputChange}
-      />
+        required
+      >
+        {vehicles.map((vehicle) => (
+          <MenuItem key={vehicle.id} value={vehicle.id}>
+            {`${vehicle.model} - ${vehicle.registrationNumber} (ID: ${vehicle.id})`}
+          </MenuItem>
+        ))}
+      </TextField>
       <Button variant="contained" color="primary" type="submit">
         Add Delivery Order
       </Button>
