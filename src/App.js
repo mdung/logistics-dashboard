@@ -7,6 +7,8 @@ import VehicleFormPage from './pages/VehicleFormPage';
 import DeliveryOrderListPage from './pages/DeliveryOrderListPage';
 import DeliveryOrderFormPage from './pages/DeliveryOrderFormPage';
 import ReportPage from './pages/ReportPage';
+import DriverList from './components/DriverList';
+import DriverForm from './components/DriverForm';
 
 const App = () => {
   return (
@@ -19,6 +21,8 @@ const App = () => {
         <Route path="/delivery-orders" element={<DeliveryOrderListPage />} />
         <Route path="/create-delivery-order" element={<DeliveryOrderFormPage />} />
         <Route path="/report" element={<ReportPage />} />
+        <Route path="/drivers" element={<DriverList />} />
+        <Route path="/add-driver" element={<DriverForm />} />
       </Routes>
     </Router>
   );

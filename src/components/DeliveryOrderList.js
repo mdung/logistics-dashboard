@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Modal, Box, Select, MenuItem } from '@mui/material';
-import { styled } from '@mui/material/styles';  // Add this import statement
+import { styled } from '@mui/material/styles';
 import DeliveryOrderService from '../services/DeliveryOrderService';
 import '../styles/DeliveryOrderList.css';
 import TrackingInfoModal from './TrackingInfoModal';
@@ -102,6 +102,7 @@ const DeliveryOrderList = () => {
               <StyledTableCell>Delivery Time</StyledTableCell>
               <StyledTableCell>Volume</StyledTableCell>
               <StyledTableCell>Vehicle ID</StyledTableCell>
+              <StyledTableCell>Driver</StyledTableCell> {/* Added Driver Column */}
               <StyledTableCell>Action</StyledTableCell>
               <StyledTableCell>Tracking</StyledTableCell>
             </TableRow>
@@ -114,6 +115,7 @@ const DeliveryOrderList = () => {
                 <TableCell>{new Date(order.deliveryTime).toLocaleString()}</TableCell>
                 <TableCell>{order.volume}</TableCell>
                 <TableCell>{order.vehicle ? order.vehicle.id : 'N/A'}</TableCell>
+                <TableCell>{order.driver ? order.driver.name : 'N/A'}</TableCell> {/* Display Driver Name */}
                 <TableCell>
                   <Button variant="contained" color="error" onClick={() => handleDelete(order.id)}>Delete</Button>
                   <Button variant="contained" color="primary" onClick={() => handleOpenModal(order.id)}>Add Vehicle</Button>

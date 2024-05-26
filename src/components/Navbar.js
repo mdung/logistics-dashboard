@@ -7,6 +7,7 @@ const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [vehicleMenuAnchorEl, setVehicleMenuAnchorEl] = useState(null);
   const [deliveryOrderMenuAnchorEl, setDeliveryOrderMenuAnchorEl] = useState(null);
+  const [driverMenuAnchorEl, setDriverMenuAnchorEl] = useState(null);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -30,6 +31,14 @@ const Navbar = () => {
 
   const handleDeliveryOrderMenuClose = () => {
     setDeliveryOrderMenuAnchorEl(null);
+  };
+
+  const handleDriverMenuOpen = (event) => {
+    setDriverMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleDriverMenuClose = () => {
+    setDriverMenuAnchorEl(null);
   };
 
   return (
@@ -67,6 +76,15 @@ const Navbar = () => {
             <MenuItem onClick={handleDeliveryOrderMenuClose} component={Link} to="/delivery-orders">Delivery Order List</MenuItem>
             <MenuItem onClick={handleDeliveryOrderMenuClose} component={Link} to="/create-delivery-order">Delivery Order Form</MenuItem>
           </Menu>
+          <Button color="inherit" onClick={handleDriverMenuOpen}>Driver</Button>
+          <Menu
+            anchorEl={driverMenuAnchorEl}
+            open={Boolean(driverMenuAnchorEl)}
+            onClose={handleDriverMenuClose}
+          >
+            <MenuItem onClick={handleDriverMenuClose} component={Link} to="/drivers">Driver List</MenuItem>
+            <MenuItem onClick={handleDriverMenuClose} component={Link} to="/add-driver">Driver Form</MenuItem>
+          </Menu>
           <Button color="inherit" component={Link} to="/report">Report</Button>
         </Box>
         <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
@@ -93,6 +111,15 @@ const Navbar = () => {
             >
               <MenuItem onClick={handleDeliveryOrderMenuClose} component={Link} to="/delivery-orders">Delivery Order List</MenuItem>
               <MenuItem onClick={handleDeliveryOrderMenuClose} component={Link} to="/create-delivery-order">Delivery Order Form</MenuItem>
+            </Menu>
+            <MenuItem onClick={handleDriverMenuOpen}>Driver</MenuItem>
+            <Menu
+              anchorEl={driverMenuAnchorEl}
+              open={Boolean(driverMenuAnchorEl)}
+              onClose={handleDriverMenuClose}
+            >
+              <MenuItem onClick={handleDriverMenuClose} component={Link} to="/drivers">Driver List</MenuItem>
+              <MenuItem onClick={handleDriverMenuClose} component={Link} to="/add-driver">Driver Form</MenuItem>
             </Menu>
             <MenuItem onClick={handleMenuClose} component={Link} to="/report">Report</MenuItem>
           </Menu>
